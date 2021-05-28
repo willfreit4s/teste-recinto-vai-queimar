@@ -1,0 +1,157 @@
+{
+  "version": 1,
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "defaultProject": "new-tos-workspace",
+  "schematics": {
+    "@nrwl/angular": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "projects": {
+    "new-tos-workspace": {
+      "projectType": "application",
+      "root": "apps/new-tos-workspace",
+      "sourceRoot": "apps/new-tos-workspace/src",
+      "prefix": "stores",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/new-tos-workspace",
+            "index": "apps/new-tos-workspace/src/index.html",
+            "main": "apps/new-tos-workspace/src/main.ts",
+            "polyfills": "apps/new-tos-workspace/src/polyfills.ts",
+            "tsConfig": "apps/new-tos-workspace/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/new-tos-workspace/src/favicon.ico",
+              "apps/new-tos-workspace/src/assets"
+            ],
+            "styles": [
+              "node_modules/devextreme/dist/css/dx.light.css",
+              "apps/new-tos-workspace/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/new-tos-workspace/src/environments/environment.ts",
+                  "with": "apps/new-tos-workspace/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "new-tos-workspace:build:production"
+            },
+            "development": {
+              "browserTarget": "new-tos-workspace:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "new-tos-workspace:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/new-tos-workspace/src/**/*.ts",
+              "apps/new-tos-workspace/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/new-tos-workspace"],
+          "options": {
+            "jestConfig": "apps/new-tos-workspace/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "new-tos-workspace-e2e": {
+      "root": "apps/new-tos-workspace-e2e",
+      "sourceRoot": "apps/new-tos-workspace-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/new-tos-workspace-e2e/cypress.json",
+            "tsConfig": "apps/new-tos-workspace-e2e/tsconfig.e2e.json",
+            "devServerTarget": "new-tos-workspace:serve:development"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "new-tos-workspace:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/new-tos-workspace-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    }
+  }
+}

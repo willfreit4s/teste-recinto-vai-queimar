@@ -1,0 +1,240 @@
+<dx-button class="add" icon="plus" type="success" (onClick)="togglePopup()">
+</dx-button>
+
+<dx-popup [showTitle]="true" title="Adicionar - Veículos em Operação"
+    [(visible)]="isPopupVisible" [closeOnOutsideClick]="true" [height]="heightPopup" [width]="widthPopup" >
+
+    <dx-form [colCount]="6" >
+
+        <dxi-item dataField="Placa Tração" [colSpan]="2"></dxi-item>
+        <dxi-item dataField="Agendamento (Trizy)" [colSpan]="4"></dxi-item>
+        <dxi-item dataField="Janela Início" [colSpan]="3"></dxi-item>
+        <dxi-item dataField="Janela Fim" [colSpan]="3"></dxi-item>
+        <dxi-item dataField="Cliente (nome)" [colSpan]="3"></dxi-item>
+        <dxi-item dataField="Cliente (CPF / CNPJ)" [colSpan]="3" ></dxi-item>
+        <dxi-item dataField="Transportadora (nome)" [colSpan]="3" ></dxi-item>
+        <dxi-item dataField="Transportadora (CNPJ)" [colSpan]="3" [editorOptions]="{ mask: '00.000.000/0000-00', maskInvalidMessage: 'CNPJ inválido!' }"></dxi-item>
+        <dxi-item dataField="Motorista (nome)" [colSpan]="2"></dxi-item>
+        <dxi-item dataField="Motorista (CPF)" [colSpan]="2" [editorOptions]="{ mask: '000.000.000-00', maskInvalidMessage: 'CNPJ inválido!' }"></dxi-item>
+        <dxi-item dataField="Motorista (CNH)" [colSpan]="2" [editorOptions]="{ mask: '00000000000', maskInvalidMessage: 'CNPJ inválido!' }"></dxi-item>
+        <dxi-item dataField="Observação" [colSpan]="6"></dxi-item>
+        <dxi-item [colSpan]="6">
+            <dx-button class="btnForm" type="success" text="Salvar"></dx-button>
+            <dx-button class="btnForm" type="danger" text="Cancelar"></dx-button>
+        </dxi-item>
+    </dx-form>
+</dx-popup>
+
+<!-- <h2 class="content-block">Veículos em Operação</h2> -->
+<dx-data-grid
+  id="gridContainer"
+  [dataSource]="veiEmOpeData"
+  [remoteOperations]="false"
+  [allowColumnReordering]="true"
+  [allowColumnResizing]="true"
+  [rowAlternationEnabled]="true"
+  [columnAutoWidth]="true"
+  [showBorders]="false"
+  [showColumnLines]="false"
+>
+  <dxo-column-chooser
+    [enabled]="true"
+    emptyPanelText="Arraste uma coluna aqui para ocultá-la"
+    title="Seletor de coluna"
+  ></dxo-column-chooser>
+
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+
+  <dxo-paging [pageSize]="20"></dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[20, 25, 50, 100]"
+  ></dxo-pager>
+  <dxo-search-panel
+    [visible]="true"
+    [highlightCaseSensitive]="true"
+  ></dxo-search-panel>
+  <dxo-group-panel
+    emptyPanelText="Arraste um cabeçalho de coluna aqui"
+    [visible]="true"
+  ></dxo-group-panel>
+  <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+
+  <!-- GMO -->
+  <dxi-column dataField="id" caption="id" dataType="number" alignment="center">
+  </dxi-column>
+  <dxi-column
+    dataField="gmo_id"
+    caption="gmo_id"
+    dataType="number"
+    alignment="center"
+  >
+  </dxi-column>
+  <dxi-column
+    dataField="placa_tracao"
+    caption="Placa Tração"
+    dataType="string"
+    alignment="center"
+  >
+  </dxi-column>
+  <dxi-column
+    dataField="janela_dhi"
+    caption="Janela dhi"
+    dataType="datetime"
+    format="dd/MM/yyyy, HH:mm:ss"
+    alignment="center"
+  >
+  </dxi-column>
+  <dxi-column
+    dataField="janela_dhf"
+    caption="Janela dhf"
+    dataType="datetime"
+    format="dd/MM/yyyy, HH:mm:ss"
+    alignment="center"
+  >
+  </dxi-column>
+  <dxi-column
+    dataField="peso_entrada"
+    caption="Peso Entrada"
+    dataType="number"
+    alignment="center"
+  >
+  </dxi-column>
+  <dxi-column
+    dataField="peso_entrada_data_hora"
+    caption="Peso EDH"
+    dataType="datetime"
+    format="dd/MM/yyyy, HH:mm:ss"
+    alignment="center"
+  >
+  </dxi-column>
+  <dxi-column
+    dataField="peso_entrada_balanca"
+    caption="Peso EB"
+    dataType="number"
+    alignment="center"
+  >
+  </dxi-column>
+  <dxi-column
+    dataField="peso_entrada_balanceiro"
+    caption="Peso E Balanceiro"
+    dataType="number"
+    alignment="center"
+  >
+  </dxi-column>
+  <dxi-column
+    dataField="peso_saida"
+    caption="Peso Saída"
+    dataType="number"
+    alignment="center"
+  >
+  </dxi-column>
+  <dxi-column
+    dataField="peso_saida_data_hora"
+    caption="Peso SDH"
+    dataType="datetime"
+    format="dd/MM/yyyy, HH:mm:ss"
+    alignment="center"
+  >
+  </dxi-column>
+  <dxi-column
+    dataField="peso_saida_balanca"
+    caption="Peso SB"
+    dataType="number"
+    alignment="center"
+  >
+  </dxi-column>
+  <dxi-column
+    dataField="peso_saida_balanceiro"
+    caption="Peso S Balanceiro"
+    dataType="number"
+    alignment="center"
+  >
+  </dxi-column>
+
+  <!-- Evento -->
+  <dxi-column
+    dataField="gmo_evento_id"
+    caption="Evento ID"
+    dataType="number"
+    alignment="center"
+  >
+  </dxi-column>
+  <dxi-column
+    dataField="evento_descricao"
+    caption="Descrição"
+    dataType="string"
+    alignment="center"
+  >
+  </dxi-column>
+  <!-- Transportadora -->
+  <dxi-column
+    dataField="transportadora_pais"
+    caption="País"
+    dataType="string"
+    alignment="center"
+  >
+  </dxi-column>
+  <!-- modificar o dataType de cnpj para string se for necessário -->
+  <dxi-column
+    dataField="transportadora_cnpj"
+    caption="CNPJ"
+    dataType="number"
+    alignment="center"
+    [customizeText]="formatCNPJ"
+  >
+  </dxi-column>
+  <dxi-column
+    dataField="transportadora_nome"
+    caption="Nome Trans"
+    dataType="string"
+    alignment="center"
+  >
+  </dxi-column>
+  <!-- Motorista -->
+  <!-- modificar o dataType de cpf para string se for necessário -->
+  <dxi-column
+    dataField="motorista_cpf"
+    caption="Motorista (CPF)"
+    dataType="number"
+    alignment="center"
+    [customizeText]="formatCPF"
+  >
+    <!-- <dxi-validation-rule
+      type="pattern"
+      [pattern]="cpfPattern"
+    ></dxi-validation-rule> -->
+  </dxi-column>
+  <!-- modificar o dataType de cnh para string se for necessário -->
+  <dxi-column
+    dataField="motorista_cnh"
+    caption="Motorista (CNH)"
+    dataType="number"
+    alignment="center"
+  >
+  </dxi-column>
+  <dxi-column
+    dataField="motorista_nome"
+    caption="Motorista (nome)"
+    dataType="string"
+    alignment="center"
+  >
+  </dxi-column>
+  <!-- Cliente -->
+  <dxi-column
+    dataField="cliente_nome"
+    caption="Cliente (nome)"
+    dataType="string"
+    alignment="center"
+  >
+  </dxi-column>
+  <!-- modificar o dataType de cpf_cnpj_cuit para string se for necessário -->
+  <dxi-column
+    dataField="cpf_cnpj_cuit"
+    caption="CPF_CNPJ_CUIT"
+    dataType="number"
+    alignment="center"
+    [customizeText]="formatCPFCNPJ"
+  >
+  </dxi-column>
+</dx-data-grid>
